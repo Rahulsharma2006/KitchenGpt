@@ -61,29 +61,29 @@ function Navbar() {
       {/* Desktop Links */}
       <div className="hidden md:flex gap-8 text-zinc-300">
 
-        <a href="#Recipes" className="hover:text-orange-500 transition duration-300">
+        <Link to="/recipes" className="hover:text-orange-500 transition duration-300">
           My Recipes
-        </a>
+        </Link>
 
-        <a href="#Pantry" className="hover:text-orange-500 transition duration-300">
+        <Link to="/pantry" className="hover:text-orange-500 transition duration-300">
           My Pantry
-        </a>
+        </Link>
 
-        <a href="#AI-Chef" className="hover:text-orange-500 transition duration-300">
+        <Link to="/ai-chef" className="hover:text-orange-500 transition duration-300">
           AI Chef
-        </a>
+        </Link>
 
-        <a href="#Meal-Plan" className="hover:text-orange-500 transition duration-300">
+        <Link to="/meal-plan" className="hover:text-orange-500 transition duration-300">
           Meal Plan
-        </a>
+        </Link>
 
-        <a href="#Explore" className="hover:text-orange-500 transition duration-300">
+        <Link to="/explore" className="hover:text-orange-500 transition duration-300">
           Explore
-        </a>
+        </Link>
 
-        <a href="#Premium" className="hover:text-orange-500 transition duration-300">
+        <Link to="/premium" className="hover:text-orange-500 transition duration-300">
           Premium
-        </a>
+        </Link>
 
       </div>
 
@@ -139,29 +139,29 @@ function Navbar() {
 
           <div className="absolute top-20 left-0 w-full bg-black border-t border-zinc-800 flex flex-col items-center gap-6 py-10 text-zinc-300 md:hidden">
 
-            <a href="#Recipes" className="hover:text-orange-500 transition duration-300">
+            <Link to="/recipes" className="hover:text-orange-500 transition duration-300">
               My Recipes
-            </a>
+            </Link>
 
-            <a href="#Pantry" className="hover:text-orange-500 transition duration-300">
+            <Link to="/pantry" className="hover:text-orange-500 transition duration-300">
               My Pantry
-            </a>
+            </Link>
 
-            <a href="#AI-Chef" className="hover:text-orange-500 transition duration-300">
+            <Link to="/ai-chef" className="hover:text-orange-500 transition duration-300">
               AI Chef
-            </a>
+            </Link>
 
-            <a href="#Meal-Plan" className="hover:text-orange-500 transition duration-300">
+            <Link to="/meal-plan" className="hover:text-orange-500 transition duration-300">
               Meal Plan
-            </a>
+            </Link>
 
-            <a href="#Explore" className="hover:text-orange-500 transition duration-300">
+            <Link to="/explore" className="hover:text-orange-500 transition duration-300">
               Explore
-            </a>
+            </Link>
 
-            <a href="#Premium" className="hover:text-orange-500 transition duration-300">
+            <Link to="/premium" className="hover:text-orange-500 transition duration-300">
               Premium
-            </a>
+            </Link>
 
             {isLoggedIn ? (
 
