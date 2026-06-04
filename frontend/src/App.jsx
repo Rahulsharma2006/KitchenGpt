@@ -17,6 +17,7 @@ import AIChef from "./pages/AIChef";
 import MealPlan from "./pages/MealPlan";
 import Explore from "./pages/Explore";
 import Premium from "./pages/Premium"; 
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
 
   return (
@@ -46,21 +47,49 @@ function App() {
 
   {/* Recipes Route */}
   <Route path="/recipes" element={<Recipes />} />
+
 {/* Pantry Route */}
- <Route path="/pantry" element={<Pantry />} />
+<Route
+  path="/pantry"
+  element={
+    <ProtectedRoute>
+      <Pantry />
+    </ProtectedRoute>
+  }
+/>
 
-  {/* AI Chef Route */}
-  <Route path="/ai-chef" element={<AIChef />} />
+{/* AI Chef Route */}
+<Route
+  path="/ai-chef"
+  element={
+    <ProtectedRoute>
+      <AIChef />
+    </ProtectedRoute>
+  }
+/>
 
-  {/* Meal Plan Route */}
-  <Route path="/meal-plan" element={<MealPlan />} />
+{/* Meal Plan Route */}
+<Route
+  path="/meal-plan"
+  element={
+    <ProtectedRoute>
+      <MealPlan />
+    </ProtectedRoute>
+  }
+/>
 
-  {/* Explore Route */}
+ {/* Explore Route */}
   <Route path="/explore" element={<Explore />} />
 
-  {/* Premium Route */}
-  <Route path="/premium" element={<Premium />} />
-
+{/* Premium Route */}
+<Route
+  path="/premium"
+  element={
+    <ProtectedRoute>
+      <Premium />
+    </ProtectedRoute>
+  }
+/>
   {/* Login Route */}
   <Route path="/login" element={<Login />} />
 
