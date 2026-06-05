@@ -1,183 +1,205 @@
 import { useState } from "react";
-import Footer from "../components/Footer";
 
 function AIChef() {
 
-  const [prompt, setPrompt] = useState("");
-
+  const [ingredients, setIngredients] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [recipe, setRecipe] = useState(null);
+  const [showActions, setShowActions] = useState(false);
 
-  // Generate Fake AI Recipe
-  const handleGenerateRecipe = () => {
+  // Fake AI Generator
+  const generateRecipe = () => {
 
-    if (prompt.trim() === "") return;
+    if (!ingredients) return;
 
     setLoading(true);
-
-    setRecipe(null);
 
     setTimeout(() => {
 
       setRecipe({
-        title: "Creamy Tomato Rice 🍚",
-        time: "20 mins",
-        calories: "450 kcal",
-
-        ingredients: [
-          "Rice",
-          "Tomato",
-          "Cheese",
-          "Garlic",
-          "Butter",
-        ],
-
-        instructions:
-          "Cook rice until soft. Sauté garlic and tomatoes in butter. Mix rice with sauce and top with melted cheese.",
-
+        title: "Cheesy Veggie Pasta 🍝",
+        time: "25 mins",
+        calories: "420 kcal",
+        ingredients: ingredients,
+        steps: [
+          "Boil pasta for 10 minutes.",
+          "Cook vegetables in olive oil.",
+          "Add cheese and sauce.",
+          "Mix pasta properly and serve hot."
+        ]
       });
 
       setLoading(false);
+
+      setShowActions(true);
 
     }, 2000);
 
   };
 
+  // Voice AI
+  const speakRecipe = () => {
+
+    if (!recipe) return;
+
+    const text = `
+      Recipe ${recipe.title}.
+      Step 1 ${recipe.steps[0]}.
+      Step 2 ${recipe.steps[1]}.
+      Step 3 ${recipe.steps[2]}.
+      Step 4 ${recipe.steps[3]}.
+    `;
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.rate = 0.9;
+    speech.pitch = 1;
+    speech.lang = "en-US";
+
+    window.speechSynthesis.speak(speech);
+
+  };
+
   return (
 
-    <div className="bg-black min-h-screen text-white">
+    <div className="min-h-screen bg-black text-white px-6 py-16">
 
-      {/* Hero */}
-      <div className="text-center px-6 py-20">
+      {/* Heading */}
+      <div className="text-center max-w-3xl mx-auto">
 
-        <h1 className="text-6xl font-bold mb-6">
+        <h1 className="text-5xl font-bold text-orange-500">
           AI Chef 👨‍🍳
         </h1>
 
-        <p className="text-zinc-400 text-xl max-w-3xl mx-auto">
-          Enter ingredients, meal ideas, or dietary preferences and let AI create a delicious recipe instantly.
+        <p className="text-zinc-400 mt-6 text-lg leading-8">
+          Enter your ingredients and let AI create a delicious recipe instantly.
         </p>
 
       </div>
 
-      {/* Main Section */}
-      <div className="grid lg:grid-cols-2 gap-10 px-10 pb-20">
+      {/* Input Section */}
+      <div className="max-w-3xl mx-auto mt-14">
 
-        {/* LEFT SIDE */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+        <textarea
+          placeholder="Enter ingredients... (e.g. onion, tomato, cheese)"
+          value={ingredients}
+          onChange={(e) => setIngredients(e.target.value)}
+          className="w-full h-40 bg-zinc-900 border border-zinc-700 rounded-3xl p-6 outline-none focus:border-orange-500 resize-none text-lg"
+        />
 
-          <h2 className="text-3xl font-bold mb-6">
-            Enter Ingredients ✨
-          </h2>
+        {/* Buttons */}
+        {
+          !showActions ? (
 
-          <textarea
-            rows="10"
-            placeholder="Example: Rice, Tomato, Cheese..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            className="w-full bg-black border border-zinc-700 rounded-2xl p-5 outline-none focus:border-orange-500 resize-none"
-          />
+            <button
+              onClick={generateRecipe}
+              className="w-full mt-6 bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-2xl transition duration-300 hover:scale-[1.02]"
+            >
 
-          <button
-            onClick={handleGenerateRecipe}
-            className="w-full mt-6 bg-orange-500 hover:bg-orange-400 text-black py-4 rounded-2xl font-bold text-lg transition hover:scale-[1.02]"
-          >
+              {loading ? "Generating Recipe..." : "Generate AI Recipe"}
 
-            {
-              loading
-                ? "Generating Recipe..."
-                : "Generate AI Recipe"
-            }
+            </button>
 
-          </button>
+          ) : (
 
-        </div>
+            <div className="flex gap-4 mt-6">
 
-        {/* RIGHT SIDE */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8">
+              <button
+                onClick={speakRecipe}
+                className="flex-1 bg-orange-500 hover:bg-orange-400 text-black font-bold py-4 rounded-2xl transition duration-300"
+              >
+                🎙 Create Now
+              </button>
 
-          {
-            recipe ? (
+              <button
+                onClick={() => {
 
-              <div>
+                  setRecipe(null);
+                  setIngredients("");
+                  setShowActions(false);
 
-                <h2 className="text-4xl font-bold mb-4 text-orange-400">
-                  {recipe.title}
-                </h2>
+                }}
+                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 rounded-2xl transition duration-300"
+              >
+                🔄 Try Next
+              </button>
 
-                <div className="flex gap-6 text-zinc-400 mb-8">
+            </div>
 
-                  <span>⏱ {recipe.time}</span>
-
-                  <span>🔥 {recipe.calories}</span>
-
-                </div>
-
-                {/* Ingredients */}
-                <div className="mb-8">
-
-                  <h3 className="text-2xl font-semibold mb-4">
-                    Ingredients
-                  </h3>
-
-                  <ul className="space-y-3 text-zinc-300">
-
-                    {
-                      recipe.ingredients.map((item, index) => (
-
-                        <li key={index}>
-                          • {item}
-                        </li>
-
-                      ))
-                    }
-
-                  </ul>
-
-                </div>
-
-                {/* Instructions */}
-                <div>
-
-                  <h3 className="text-2xl font-semibold mb-4">
-                    Instructions
-                  </h3>
-
-                  <p className="text-zinc-300 leading-8">
-                    {recipe.instructions}
-                  </p>
-
-                </div>
-
-              </div>
-
-            ) : (
-
-              <div className="h-full flex flex-col justify-center items-center text-center">
-
-                <div className="text-7xl mb-6">
-                  🍳
-                </div>
-
-                <h2 className="text-3xl font-bold mb-4">
-                  Your AI Recipe Will Appear Here
-                </h2>
-
-                <p className="text-zinc-500 max-w-md">
-                  Enter ingredients and generate personalized recipes instantly with AI.
-                </p>
-
-              </div>
-
-            )
-          }
-
-        </div>
+          )
+        }
 
       </div>
 
-      <Footer />
+      {/* Recipe Card */}
+      {
+        recipe && (
+
+          <div className="max-w-4xl mx-auto mt-16 bg-zinc-900 border border-zinc-800 rounded-3xl p-10 shadow-xl shadow-orange-500/10">
+
+            <h2 className="text-4xl font-bold text-orange-400">
+              {recipe.title}
+            </h2>
+
+            <div className="flex gap-8 mt-6 text-zinc-400">
+
+              <p>⏱ {recipe.time}</p>
+
+              <p>🔥 {recipe.calories}</p>
+
+            </div>
+
+            {/* Ingredients */}
+            <div className="mt-10">
+
+              <h3 className="text-2xl font-semibold mb-4">
+                Ingredients
+              </h3>
+
+              <p className="text-zinc-300 leading-8">
+                {recipe.ingredients}
+              </p>
+
+            </div>
+
+            {/* Steps */}
+            <div className="mt-10">
+
+              <h3 className="text-2xl font-semibold mb-6">
+                Cooking Steps
+              </h3>
+
+              <div className="space-y-5">
+
+                {
+                  recipe.steps.map((step, index) => (
+
+                    <div
+                      key={index}
+                      className="bg-black border border-zinc-800 rounded-2xl p-5"
+                    >
+
+                      <span className="text-orange-400 font-bold">
+                        Step {index + 1}:
+                      </span>
+
+                      <p className="text-zinc-300 mt-2">
+                        {step}
+                      </p>
+
+                    </div>
+
+                  ))
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )
+      }
 
     </div>
 
