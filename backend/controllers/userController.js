@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
@@ -73,8 +74,14 @@ const loginUser = async (req,res)=>{
             });
         }
 
+            const token = jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+);
         res.status(200).json({
             message:"User Logged In Successfully",
+            token,
             user:{
                 _id: user._id,
                 name: user.name,
