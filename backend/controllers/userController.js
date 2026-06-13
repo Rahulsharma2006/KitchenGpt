@@ -36,7 +36,8 @@ const registerUser = async (req, res) => {
              _id: user._id,
     name: user.name,
     email: user.email,
-    isPremium: user.isPremium
+    isPremium: user.isPremium,
+    role: user.role
            }
         });
 
@@ -86,7 +87,8 @@ const loginUser = async (req,res)=>{
                 _id: user._id,
                 name: user.name,
                 email: user.email,
-                isPremium: user.isPremium
+                isPremium: user.isPremium,
+                role: user.role
             }
         });
 
