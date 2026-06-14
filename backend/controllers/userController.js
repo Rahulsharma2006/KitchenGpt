@@ -76,7 +76,9 @@ const loginUser = async (req,res)=>{
         }
 
             const token = jwt.sign(
-    { id: user._id },
+    { id: user._id,
+    role:user.role
+    },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
 );
@@ -100,6 +102,32 @@ const loginUser = async (req,res)=>{
 
     }
 };
+const getCurrentUser = async (req, res) => {
+    try {
 
+        const user = await User.findById(req.user.id).select("-password");
 
-module.exports = { registerUser, loginUser };
+        if (!user) {
+            return res.status(404).json({
+                message: "User Not Found"
+            });
+        }
+
+        res.status(200).json({
+            message: "User Profile Granted",
+            user
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};
+module.exports ={
+    loginUser,
+    registerUser,
+    getCurrentUser
+}
