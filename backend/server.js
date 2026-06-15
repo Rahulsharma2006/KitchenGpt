@@ -7,12 +7,14 @@ const connectDB = require("./config/db");
 const app = express();
 
 const userRoutes = require('./routes/userRoutes');
+const recipeRoutes = require("./routes/recipeRoutes");
 
 connectDB();
 
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+app.use("/api/recipes", recipeRoutes);
 
 const PORT = process.env.PORT || 8080;
 
