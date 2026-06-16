@@ -116,12 +116,51 @@ const deleteRecipe = async (req,res)=>{
     }
 }
 
+const getRecipeById = async (req,res)=>{
+    try{
+        const {id} = req.params;
+        const recipe = await Recipe.findById(id).populate("createdBy","name email");
+        
+        if(!recipe){
+            return res.status(404).json({ 
+                message:"Recipe not found"
+            });
+        }
+        res.status(200).json({
+            recipe
+        });
+    }catch(error){
+        res.status(500).json({
+            message: error.message
+        });
+    }
+}
+const getAllRecipes = async (req, res) => {
+    try {
 
+        const recipes = await Recipe.find()
+            .populate("createdBy", "name email")
+            .sort({ createdAt: -1 });
 
+        res.status(200).json({
+            count: recipes.length,
+            recipes
+        });
 
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};
 module.exports = {
     createRecipe,
     getMyRecipes,
     updateRecipe,
-    deleteRecipe
+    deleteRecipe,
+    getRecipeById,
+    getAllRecipes
 };
+   
