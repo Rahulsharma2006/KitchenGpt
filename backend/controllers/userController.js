@@ -126,8 +126,96 @@ const getCurrentUser = async (req, res) => {
 
     }
 };
+ const addToFavorites = async (req,res)=>{
+    try{
+        const userId = req.user.id;
+        const recipeId = req.params.recipeId;
+
+        const user = await User.findById(userId);
+
+        if(!user){
+            return res.status(404).json({
+                message:"User Not Found"
+            });
+        }
+
+        if(user.favorites.includes(recipeId)){
+            return res.status(400).json({
+                message:"Recipe already in favorites"
+            });
+        }
+
+        user.favorites.push(recipeId);
+        await user.save();
+
+        res.status(200).json({
+            message:"Recipe added to favorites",
+            favorites:user.favorites
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};
+const removeFromFavorites = async (req,res)=>{
+    try{
+        const userId = req.user.id;
+        const recipeId = req.params.recipeId;
+
+        const user = await User.findById(userId);
+
+        if(!user){
+            return res.status(404).json({
+                message:"User Not Found"
+            });
+        }
+
+        if(!user.favorites.includes(recipeId)){
+            return res.status(400).json({
+                message:"Recipe not in favorites"
+            });
+        }
+
+        user.favorites.pull(recipeId);
+        await user.save();
+
+        res.status(200).json({
+            message:"Recipe removed from favorites",
+            favorites:user.favorites
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};
+  const getFavorites = async (req,res)=>{
+    try{
+        const userId = req.user.id;
+        
+        const user = await User.findById(userId).populate("favorites");
+        res.status(200).json({
+            message: "Favorites retrieved successfully",
+            favorites: user.favorites
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
 module.exports ={
     loginUser,
     registerUser,
-    getCurrentUser
+    getCurrentUser,
+    addToFavorites,
+    removeFromFavorites,
+    getFavorites
 }

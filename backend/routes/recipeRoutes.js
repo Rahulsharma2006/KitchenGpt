@@ -21,6 +21,4 @@ router.delete("/delete/:id", authMiddleware, deleteRecipe);
 
 router.post("/create", authMiddleware, createRecipe);
 
-
-
 module.exports = router;
