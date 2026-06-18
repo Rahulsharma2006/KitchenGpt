@@ -138,9 +138,49 @@ const getRecipeById = async (req,res)=>{
 const getAllRecipes = async (req, res) => {
     try {
 
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 5;
+
+        const skip = (page - 1) * limit;
+
         const recipes = await Recipe.find()
             .populate("createdBy", "name email")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.status(200).json({
+            page,
+            limit,
+            count: recipes.length,
+            recipes
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};
+const searchRecipes = async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        if (!query) {
+            return res.status(400).json({
+                message: "Search query is required"
+            });
+        }
+
+        const recipes = await Recipe.find({
+            $or: [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } },
+                { ingredients: { $regex: query, $options: "i" } }
+            ]
+        }).populate("createdBy", "name email");
 
         res.status(200).json({
             count: recipes.length,
@@ -155,12 +195,32 @@ const getAllRecipes = async (req, res) => {
 
     }
 };
+     const getLatestRecipes = async (req,res)=>{
+        try{
+           const recipes = await Recipe.find()
+        .sort({createdAt:-1})
+        .limit(5)
+        .populate("createdBy","name email");
+
+        res.status(200).json({
+            count:recipes.length,
+            recipes
+        });
+
+        }catch(error){
+            res.status(500).json({
+                message: error.message
+            });
+        }
+     }
 module.exports = {
     createRecipe,
     getMyRecipes,
     updateRecipe,
     deleteRecipe,
     getRecipeById,
-    getAllRecipes
+    getAllRecipes,
+    searchRecipes,
+    getLatestRecipes
 };
    

@@ -7,11 +7,17 @@ const { updateRecipe } = require("../controllers/recipeController");
 const { deleteRecipe } = require("../controllers/recipeController");
 const { getRecipeById } = require("../controllers/recipeController");
 const { getAllRecipes } = require("../controllers/recipeController");
+const { searchRecipes } = require("../controllers/recipeController");
+const { getLatestRecipes } = require("../controllers/recipeController");
 
 
 router.get("/my-recipes", authMiddleware, getMyRecipes);
 
 router.get("/", getAllRecipes);
+
+router.get("/search", searchRecipes);
+
+router.get("/latest", getLatestRecipes);
 
 router.get("/:id", getRecipeById);
 
