@@ -20,6 +20,10 @@ const recipeSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    imagePublicId: {
+        type: String,
+        default: null,
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

@@ -1,6 +1,6 @@
 const Recipe = require("../models/Recipe");
 const cloudinary = require("../config/cloudinary");
-const upload = require("../middleware/upload");
+
 
 const createRecipe = async (req, res) => {
     try {
@@ -10,7 +10,8 @@ const createRecipe = async (req, res) => {
             description,
             ingredients,
             instructions,
-            imageUrl
+            imageUrl,
+            imagePublicId
         } = req.body;
 
         if (!title || !description || !ingredients || !instructions) {
@@ -25,6 +26,7 @@ const createRecipe = async (req, res) => {
             ingredients,
             instructions,
             imageUrl,
+            imagePublicId,
             createdBy: req.user.id
         });
 
@@ -71,12 +73,13 @@ const createRecipe = async (req, res) => {
                 message:"Forbidden: You can only update your own recipes"
             });
         }
-        const {title,description,ingredients,instructions,imageUrl} = req.body;
+        const {title,description,ingredients,instructions,imageUrl,imagePublicId} = req.body;
         recipe.title = title || recipe.title;
         recipe.description = description || recipe.description;
         recipe.ingredients = ingredients || recipe.ingredients;
         recipe.instructions = instructions || recipe.instructions;
         recipe.imageUrl = imageUrl || recipe.imageUrl;
+        recipe.imagePublicId = imagePublicId || recipe.imagePublicId;
 
         await recipe.save();
 
@@ -106,6 +109,9 @@ const deleteRecipe = async (req,res)=>{
                 message:"Forbidden: You can only delete your own recipes"
             });
         }
+         if(recipe.imagePublicId){
+    await cloudinary.uploader.destroy(recipe.imagePublicId);
+      }
        await recipe.deleteOne();
         res.status(200).json({
             message:"Recipe Deleted Successfully"
@@ -226,7 +232,8 @@ const searchRecipes = async (req, res) => {
 
         res.status(200).json({
             message:"Image uploaded successfully",
-            imageUrl:req.file.path
+            imageUrl:req.file.path,
+            imagePublicId:req.file.filename
         });
 
     }
