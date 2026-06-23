@@ -9,6 +9,30 @@ const { unblockUser } = require("../controllers/adminController");
 const { makePremium } = require("../controllers/adminController");
 const { removePremium } = require("../controllers/adminController");
 const {getDashboardStats} = require("../controllers/adminController");
+const { getPendingRecipes } = require("../controllers/adminController");
+const { approveRecipe } = require("../controllers/adminController");
+const { rejectRecipe } = require("../controllers/adminController");
+
+router.get(
+    "/pending-recipes",
+    authMiddleware,
+    adminMiddleware,
+    getPendingRecipes
+)
+
+router.patch(
+    "/approve-recipe/:id",
+    authMiddleware,
+    adminMiddleware,
+    approveRecipe
+)
+
+router.patch(
+    "/reject-recipe/:id",
+    authMiddleware,
+    adminMiddleware,
+    rejectRecipe
+)   
 
 router.get(
     "/dashboard-stats",

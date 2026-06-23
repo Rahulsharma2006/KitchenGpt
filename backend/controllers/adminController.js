@@ -234,12 +234,107 @@ const removePremium = async (req, res) => {
         const totalPremiumUsers = await User.countDocuments({ isPremium: true });
         const totalBlockedUsers = await User.countDocuments({ isBlocked: true });
         const totalRecipes = await Recipe.countDocuments();
+        const totalApprovedRecipes =await Recipe.countDocuments({status:"approved"});
+        const totalPendingRecipes =await Recipe.countDocuments({status:"pending"});
+        const totalRejectedRecipes =await Recipe.countDocuments({status:"rejected"});
 
         res.status(200).json({
             totalUsers,
             totalPremiumUsers,
             totalBlockedUsers,
-            totalRecipes
+            totalRecipes,
+            totalApprovedRecipes,
+            totalPendingRecipes,
+            totalRejectedRecipes
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+  const getPendingRecipes = async (req, res) => {
+    try{
+        const pendingRecipes = await Recipe.find({status:'pending'}).populate('createdBy','name email').sort({createdAt:-1});
+        res.status(200).json({
+            count:pendingRecipes.length,
+           recipes: pendingRecipes
+        });
+    } catch (error) {
+        res.status(500).json({
+          message: error.message
+        }); 
+    }
+  };
+  const approveRecipe = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const recipe = await Recipe.findById(id);
+
+        if (!recipe) {
+            return res.status(404).json({
+                message: "Recipe not found"
+            });
+        }
+     if(recipe.status==="approved"){
+    return res.status(400).json({
+
+        message:"Recipe already approved"
+
+    });
+     }
+       if(recipe.status==="rejected"){
+    return res.status(400).json({
+        message:"Rejected recipe cannot be approved directly"
+    });
+     }
+        recipe.status = 'approved';
+
+        await recipe.save();
+
+        res.status(200).json({
+            message: "Recipe approved successfully",
+            recipe
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+const rejectRecipe = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const recipe = await Recipe.findById(id);
+
+        if (!recipe) {
+            return res.status(404).json({
+                message: "Recipe not found"
+            });
+        }
+         if(recipe.status==="rejected"){
+    return res.status(400).json({
+
+        message:"Recipe already rejected"
+
+      });
+      }
+      if(recipe.status==="approved"){
+    return res.status(400).json({
+        message:"approved recipe cannot be rejected directly"
+    });
+}
+        recipe.status = 'rejected';
+
+        await recipe.save();
+
+        res.status(200).json({
+            message: "Recipe rejected successfully",
+            recipe
         });
 
     } catch (error) {
@@ -255,5 +350,8 @@ module.exports = {
     unblockUser,
     makePremium,
     removePremium,
-    getDashboardStats
+    getDashboardStats,
+    getPendingRecipes,
+    approveRecipe,
+    rejectRecipe
 }
