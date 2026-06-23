@@ -6,6 +6,31 @@ const { getAllUsers } = require("../controllers/adminController");
 const { DeleteUser } = require("../controllers/adminController");
 const { blockUser } = require("../controllers/adminController");
 const { unblockUser } = require("../controllers/adminController");
+const { makePremium } = require("../controllers/adminController");
+const { removePremium } = require("../controllers/adminController");
+const {getDashboardStats} = require("../controllers/adminController");
+
+router.get(
+    "/dashboard-stats",
+    authMiddleware,
+    adminMiddleware,
+    getDashboardStats
+)
+
+
+router.patch(
+    "/remove-premium/:id",
+    authMiddleware,
+    adminMiddleware,
+    removePremium
+)
+
+router.patch(
+    "/make-premium/:id",
+    authMiddleware,
+    adminMiddleware,
+    makePremium
+)
 
 router.patch(
     "/block-user/:id",

@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Recipe = require("../models/Recipe");
 
 const getAllUsers = async (req, res) => {
     try {
@@ -143,9 +144,116 @@ const unblockUser = async (req, res) => {
 
     }
 };
+   const makePremium = async (req, res) => {
+    try {
+       const {id} = req.params;
+
+       const user = await User.findById(id);
+       
+       if(!user){
+        return res.status(404).json({
+            message:"User not found"
+        });
+       }
+       if(user.role === "admin"){
+        return res.status(403).json({
+            message:"Admin cannot be made premium"
+        });
+       }
+       if(user.isPremium){
+        return res.status(400).json({
+            message:"User is already premium"
+        });
+       }
+
+       user.isPremium = true;
+
+       await user.save();
+
+       res.status(200).json({
+        message:"User made premium successfully",
+        user:{
+            _id:user._id,
+            name:user.name,
+            email:user.email,
+            role:user.role,
+            isPremium:user.isPremium
+        }
+       });
+    }catch(error){
+        res.status(500).json({
+            message:error.message
+        });
+    } 
+};
+const removePremium = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+        if (user.role === "admin") {
+            return res.status(403).json({
+                message: "Admin cannot be removed from premium"
+            });
+        }
+        if (!user.isPremium) {
+            return res.status(400).json({
+                message: "User is not premium"
+            });
+        }
+
+        user.isPremium = false;
+
+        await user.save();
+
+        res.status(200).json({
+            message: "User removed from premium successfully",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isPremium: user.isPremium
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+            });
+        }
+    };
+ const getDashboardStats = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalPremiumUsers = await User.countDocuments({ isPremium: true });
+        const totalBlockedUsers = await User.countDocuments({ isBlocked: true });
+        const totalRecipes = await Recipe.countDocuments();
+
+        res.status(200).json({
+            totalUsers,
+            totalPremiumUsers,
+            totalBlockedUsers,
+            totalRecipes
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
 module.exports = {
     getAllUsers,
     DeleteUser,
     blockUser,
-    unblockUser
+    unblockUser,
+    makePremium,
+    removePremium,
+    getDashboardStats
 }
