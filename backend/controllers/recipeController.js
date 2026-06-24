@@ -151,7 +151,7 @@ const getAllRecipes = async (req, res) => {
 
         const skip = (page - 1) * limit;
 
-        const recipes = await Recipe.find()
+        const recipes = await Recipe.find({status: "approved" })
             .populate("createdBy", "name email")
             .sort({ createdAt: -1 })
             .skip(skip)
@@ -186,7 +186,8 @@ const searchRecipes = async (req, res) => {
             $or: [
                 { title: { $regex: query, $options: "i" } },
                 { description: { $regex: query, $options: "i" } },
-                { ingredients: { $regex: query, $options: "i" } }
+                { ingredients: { $regex: query, $options: "i" } },
+                {status: "approved" }
             ]
         }).populate("createdBy", "name email");
 
@@ -205,7 +206,7 @@ const searchRecipes = async (req, res) => {
 };
      const getLatestRecipes = async (req,res)=>{
         try{
-           const recipes = await Recipe.find()
+           const recipes = await Recipe.find({status: "approved" })
         .sort({createdAt:-1})
         .limit(5)
         .populate("createdBy","name email");
