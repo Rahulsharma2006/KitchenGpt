@@ -12,7 +12,20 @@ const {getDashboardStats} = require("../controllers/adminController");
 const { getPendingRecipes } = require("../controllers/adminController");
 const { approveRecipe } = require("../controllers/adminController");
 const { rejectRecipe } = require("../controllers/adminController");
+const {reviewReport} = require("../controllers/adminController");
+const {getAllReports} = require("../controllers/adminController");
 
+router.get("/reports",
+ authMiddleware,
+ adminMiddleware,
+ getAllReports
+ );
+router.put(
+    "/reports/:id/review",
+    authMiddleware,
+    adminMiddleware,
+    reviewReport
+);
 router.get(
     "/pending-recipes",
     authMiddleware,

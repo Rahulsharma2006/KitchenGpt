@@ -81,6 +81,8 @@ const createRecipe = async (req, res) => {
         recipe.imageUrl = imageUrl || recipe.imageUrl;
         recipe.imagePublicId = imagePublicId || recipe.imagePublicId;
 
+        recipe.status = "pending";
+
         await recipe.save();
 
         res.status(200).json({
@@ -127,7 +129,10 @@ const deleteRecipe = async (req,res)=>{
 const getRecipeById = async (req,res)=>{
     try{
         const {id} = req.params;
-        const recipe = await Recipe.findById(id).populate("createdBy","name email");
+        const recipe = await Recipe.findOne({
+     _id: id,
+     status: "approved"
+       }).populate("createdBy", "name email");
         
         if(!recipe){
             return res.status(404).json({ 
@@ -183,11 +188,12 @@ const searchRecipes = async (req, res) => {
         }
 
         const recipes = await Recipe.find({
+            status:"approved",
             $or: [
                 { title: { $regex: query, $options: "i" } },
                 { description: { $regex: query, $options: "i" } },
                 { ingredients: { $regex: query, $options: "i" } },
-                {status: "approved" }
+               
             ]
         }).populate("createdBy", "name email");
 

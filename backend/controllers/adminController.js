@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const Recipe = require("../models/Recipe");
+const Report = require("../models/Report");
+
 
 const getAllUsers = async (req, res) => {
     try {
@@ -316,6 +318,7 @@ const rejectRecipe = async (req, res) => {
                 message: "Recipe not found"
             });
         }
+        
          if(recipe.status==="rejected"){
     return res.status(400).json({
 
@@ -343,6 +346,62 @@ const rejectRecipe = async (req, res) => {
         });
     }
 };
+const reviewReport = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+
+        const report = await Report.findById(id);
+
+        if (!report) {
+            return res.status(404).json({
+                message: "Report not found"
+            });
+        }
+
+        if (report.status === "reviewed") {
+            return res.status(400).json({
+                message: "Report already reviewed"
+            });
+        }
+
+        report.status = "reviewed";
+
+        await report.save();
+
+        res.status(200).json({
+            message: "Report reviewed successfully",
+            report
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};
+const getAllReports = async (req,res)=>{
+    try{
+
+        const reports = await Report.find()
+        .populate("recipe","title status")
+        .populate("reportedBy","name email")
+        .sort({createdAt:-1});
+
+        res.status(200).json({
+            count:reports.length,
+            reports
+        });
+
+    }
+    catch(error){
+        res.status(500).json({
+            message:error.message
+        });
+    }
+}
 module.exports = {
     getAllUsers,
     DeleteUser,
@@ -353,5 +412,7 @@ module.exports = {
     getDashboardStats,
     getPendingRecipes,
     approveRecipe,
-    rejectRecipe
+    rejectRecipe,
+    reviewReport,
+    getAllReports
 }

@@ -11,23 +11,55 @@ const { searchRecipes } = require("../controllers/recipeController");
 const { getLatestRecipes } = require("../controllers/recipeController");
 const upload = require("../middleware/upload");
 const { uploadImage } = require("../controllers/recipeController");
+const { createRecipeValidation,updateRecipeValidation,recipeIdValidation,searchRecipeValidation} = require("../validators/recipeValidator")
+const validate = require("../middleware/validateMiddleware");
 
 
-router.get("/my-recipes", authMiddleware, getMyRecipes);
+router.get("/my-recipes",
+    authMiddleware,
+    getMyRecipes
+);
 
-router.get("/", getAllRecipes);
+router.get("/",
+    getAllRecipes
+);
 
-router.get("/search", searchRecipes);
+router.get("/search",
+    searchRecipeValidation,
+    validate,
+    searchRecipes
+);
 
-router.get("/latest", getLatestRecipes);
+router.get("/latest",
+    getLatestRecipes
+);
 
-router.get("/:id", getRecipeById);
+router.get("/:id",
+    recipeIdValidation,
+    validate,
+    getRecipeById
+);
 
-router.put("/update/:id", authMiddleware, updateRecipe);
+router.put("/update/:id",
+    authMiddleware,
+    updateRecipeValidation,
+    validate,
+    updateRecipe
+);
 
-router.delete("/delete/:id", authMiddleware, deleteRecipe); 
+router.delete("/delete/:id",
+    authMiddleware,
+    recipeIdValidation,
+    validate,
+    deleteRecipe
+);
 
-router.post("/create", authMiddleware, createRecipe);
+router.post("/create",
+    authMiddleware,
+    createRecipeValidation,
+    validate,
+    createRecipe
+);
 
 router.post(
     "/upload-image",

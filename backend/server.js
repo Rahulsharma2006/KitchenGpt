@@ -9,20 +9,22 @@ const app = express();
 const userRoutes = require('./routes/userRoutes');
 const recipeRoutes = require("./routes/recipeRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 connectDB();
 
 app.use(express.json());
 
+app.use("/api/reports", reportRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/recipes", recipeRoutes);
+ app.use("/api/admin", adminRoutes);
 
 const PORT = process.env.PORT || 8080;
 
 app.get('/', (req, res) => {
    res.send('Server is Running 🚀');
 });
- app.use("/api/admin", adminRoutes);
  
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
