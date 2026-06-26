@@ -14,85 +14,107 @@ const { approveRecipe } = require("../controllers/adminController");
 const { rejectRecipe } = require("../controllers/adminController");
 const {reviewReport} = require("../controllers/adminController");
 const {getAllReports} = require("../controllers/adminController");
+const validate = require("../middleware/validateMiddleware");
+const { userIdValidation,recipeIdValidation,reportIdValidation} = require("../validators/adminValidator");
 
-router.get("/reports",
- authMiddleware,
- adminMiddleware,
- getAllReports
- );
+router.get(
+"/reports",
+authMiddleware,
+adminMiddleware,
+getAllReports
+);
+
 router.put(
-    "/reports/:id/review",
-    authMiddleware,
-    adminMiddleware,
-    reviewReport
+"/reports/:id/review",
+authMiddleware,
+adminMiddleware,
+reportIdValidation,
+validate,
+reviewReport
 );
-router.get(
-    "/pending-recipes",
-    authMiddleware,
-    adminMiddleware,
-    getPendingRecipes
-)
-
-router.patch(
-    "/approve-recipe/:id",
-    authMiddleware,
-    adminMiddleware,
-    approveRecipe
-)
-
-router.patch(
-    "/reject-recipe/:id",
-    authMiddleware,
-    adminMiddleware,
-    rejectRecipe
-)   
 
 router.get(
-    "/dashboard-stats",
-    authMiddleware,
-    adminMiddleware,
-    getDashboardStats
-)
-
-
-router.patch(
-    "/remove-premium/:id",
-    authMiddleware,
-    adminMiddleware,
-    removePremium
-)
-
-router.patch(
-    "/make-premium/:id",
-    authMiddleware,
-    adminMiddleware,
-    makePremium
-)
-
-router.patch(
-    "/block-user/:id",
-    authMiddleware,
-    adminMiddleware,
-    blockUser
+"/pending-recipes",
+authMiddleware,
+adminMiddleware,
+getPendingRecipes
 );
+
 router.patch(
-    "/unblock-user/:id",
-    authMiddleware,
-    adminMiddleware,
-    unblockUser
-)
+"/approve-recipe/:id",
+authMiddleware,
+adminMiddleware,
+recipeIdValidation,
+validate,
+approveRecipe
+);
+
+router.patch(
+"/reject-recipe/:id",
+authMiddleware,
+adminMiddleware,
+recipeIdValidation,
+validate,
+rejectRecipe
+);
+
+router.get(
+"/dashboard-stats",
+authMiddleware,
+adminMiddleware,
+getDashboardStats
+);
+
+router.patch(
+"/remove-premium/:id",
+authMiddleware,
+adminMiddleware,
+userIdValidation,
+validate,
+removePremium
+);
+
+router.patch(
+"/make-premium/:id",
+authMiddleware,
+adminMiddleware,
+userIdValidation,
+validate,
+makePremium
+);
+
+router.patch(
+"/block-user/:id",
+authMiddleware,
+adminMiddleware,
+userIdValidation,
+validate,
+blockUser
+);
+
+router.patch(
+"/unblock-user/:id",
+authMiddleware,
+adminMiddleware,
+userIdValidation,
+validate,
+unblockUser
+);
+
 router.delete(
-    "/delete-users/:id",
-    authMiddleware,
-    adminMiddleware,
-    DeleteUser
-);
-router.get(
-    "/users",
-    authMiddleware,
-    adminMiddleware,
-    getAllUsers
+"/delete-users/:id",
+authMiddleware,
+adminMiddleware,
+userIdValidation,
+validate,
+DeleteUser
 );
 
+router.get(
+"/users",
+authMiddleware,
+adminMiddleware,
+getAllUsers
+);
 
 module.exports = router;
