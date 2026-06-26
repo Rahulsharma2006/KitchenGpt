@@ -1,5 +1,6 @@
 const express = require("express");
 const {registerValidation,loginValidation} = require("../validators/userValidator");
+const authLimiter = require("../middleware/rateLimiter");
 
 const validate = require("../middleware/validateMiddleware");
 
@@ -16,8 +17,8 @@ const {
     getFavorites
 } = require("../controllers/userController");
     
-router.post("/register", registerValidation, validate, registerUser);
-router.post("/login",loginValidation,validate, loginUser);
+router.post("/register", authLimiter,registerValidation, validate, registerUser);
+router.post("/login",authLimiter,loginValidation,validate, loginUser);
 router.get("/profile",authMiddleware,getCurrentUser);
 router.post("/favorites/:recipeId", authMiddleware, addToFavorites);
 router.delete("/favorites/:recipeId", authMiddleware, removeFromFavorites);

@@ -13,6 +13,7 @@ const upload = require("../middleware/upload");
 const { uploadImage } = require("../controllers/recipeController");
 const { createRecipeValidation,updateRecipeValidation,recipeIdValidation,searchRecipeValidation} = require("../validators/recipeValidator")
 const validate = require("../middleware/validateMiddleware");
+const authLimiter=require("../middleware/rateLimiter");
 
 
 router.post(
@@ -25,6 +26,7 @@ router.post(
 
 router.post(
     "/upload-image",
+    authLimiter,
     authMiddleware,
     upload.single("image"),
     uploadImage
