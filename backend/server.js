@@ -11,6 +11,7 @@ const userRoutes = require('./routes/userRoutes');
 const recipeRoutes = require("./routes/recipeRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+const aiRoutes=require("./routes/aiRoutes");
 
 
 connectDB();
@@ -20,7 +21,8 @@ app.use(express.json());
 app.use("/api/reports", reportRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/recipes", recipeRoutes);
- app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/ai",aiRoutes);
 
 const PORT = process.env.PORT || 8080;
 
