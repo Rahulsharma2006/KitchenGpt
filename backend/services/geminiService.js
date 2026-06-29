@@ -4,7 +4,14 @@ require("dotenv").config();
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 });
+const cleanJSON = (text) => {
 
+    return text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+};
 const generateRecipe = async (prompt) => {
 
     try {
@@ -64,8 +71,50 @@ const generateRecipe = async (prompt) => {
     }
 
 };
+        const generateSummary = async (recipe) => {
 
+    try {
+
+        const prompt = `
+You are an expert chef.
+
+Summarize the following recipe into 15-20 easy cooking steps.
+
+Recipe:
+${recipe}
+
+Return ONLY valid JSON in this format:
+
+{
+  "summary": [
+    "Step 1",
+    "Step 2",
+    "Step 3",
+    "Step 4",
+    "Step 5"
+  ]
+}
+
+Do not return markdown.
+`;
+
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt
+        });
+           
+
+        return cleanJSON(response.text);
+
+    } catch (error) {
+
+        throw error;
+
+    }
+
+};
 module.exports = {
     generateRecipe,
-    generateNutrition
+    generateNutrition,
+    generateSummary
 };
