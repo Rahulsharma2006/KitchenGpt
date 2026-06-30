@@ -112,9 +112,64 @@ Do not return markdown.
 
     }
 
+        };
+      const improveRecipe = async (recipe) => {
+
+    try {
+
+        const prompt = `
+You are an expert chef.
+
+Analyze the following recipe and suggest EXACTLY 10 improvements.
+
+Rules:
+- Return exactly 20 suggestions.
+- Suggestions should improve taste, texture, nutrition or cooking technique.
+- Keep every suggestion short.
+- Return ONLY valid JSON.
+
+Recipe:
+${recipe}
+
+Return ONLY this JSON:
+
+{
+    "improvements":[
+        "Suggestion 1",
+        "Suggestion 2",
+        "Suggestion 3",
+        "Suggestion 4",
+        "Suggestion 5",
+        "Suggestion 6",
+        "Suggestion 7",
+        "Suggestion 8",
+        "Suggestion 9",
+        "Suggestion 10"
+    ]
+}
+
+Do not return markdown.
+`;
+
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt
+        });
+
+        return cleanJSON(response.text);
+
+    } catch (error) {
+
+        throw error;
+
+    }
+
 };
+
+
 module.exports = {
     generateRecipe,
     generateNutrition,
-    generateSummary
+    generateSummary,
+    improveRecipe
 };

@@ -5,6 +5,7 @@
      const {generateAIRecipe}=require("../controllers/aiController");
    const { nutritionEstimator } = require("../controllers/aiController");
    const { recipeSummarizer } = require("../controllers/aiController");
+   const {recipeImprover} = require("../controllers/aiController");
        
 
      router.post("/generate",authMiddleware,generateAIRecipe);
@@ -12,6 +13,8 @@
      router.post("/nutrition",authMiddleware,nutritionEstimator);
 
      router.post("/summarize",authMiddleware,recipeSummarizer);
+
+     router.post("/improve",authMiddleware,recipeImprover);
 
 
 module.exports=router;

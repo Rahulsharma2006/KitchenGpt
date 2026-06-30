@@ -1,8 +1,10 @@
 const { generateRecipe } = require("../services/geminiService");
 const { generateNutrition } = require("../services/geminiService");
 const {generateSummary} = require("../services/geminiService");
+const {improveRecipe} = require("../services/geminiService");
 
 
+    //    GenerateAtRecipe
 const generateAIRecipe = async(req,res)=>{
 try{
 
@@ -35,6 +37,7 @@ try{
   }
 
    }
+        //    nutritionEstimator
      const nutritionEstimator = async (req, res) => {
     try {
 
@@ -66,6 +69,7 @@ try{
 
     }
 };
+                //  recipeSummarizer
         const recipeSummarizer = async (req, res) => {
 
     try {
@@ -96,9 +100,40 @@ try{
     }
 
 };
+                 // recipeImprover
+        const recipeImprover = async (req, res) => {
 
+    try {
+
+        const { recipe } = req.body;
+
+        if (!recipe) {
+
+            return res.status(400).json({
+                message: "Recipe is required"
+            });
+
+        }
+
+        const improvements = await improveRecipe(recipe);
+
+        res.status(200).json({
+            success: true,
+            ...JSON.parse(improvements)
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
 module.exports={
 generateAIRecipe,
  nutritionEstimator,
- recipeSummarizer
+ recipeSummarizer,
+ recipeImprover
 }
