@@ -2,6 +2,7 @@ const { generateRecipe } = require("../services/geminiService");
 const { generateNutrition } = require("../services/geminiService");
 const {generateSummary} = require("../services/geminiService");
 const {improveRecipe} = require("../services/geminiService");
+const {generateMealPlan} = require("../services/geminiService");
 
 
     //    GenerateAtRecipe
@@ -131,9 +132,50 @@ try{
     }
 
 };
+
+
+          const mealPlanner = async (req, res) => {
+
+    try {
+
+        const { goal, days } = req.body;
+
+        if (!goal) {
+
+            return res.status(400).json({
+                message: "Goal is required"
+            });
+
+        }
+
+        if (!days) {
+
+            return res.status(400).json({
+                message: "Days is required"
+            });
+
+        }
+
+        const mealPlan = await generateMealPlan(goal, days);
+
+        res.status(200).json({
+            success: true,
+            ...JSON.parse(mealPlan)
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
 module.exports={
 generateAIRecipe,
  nutritionEstimator,
  recipeSummarizer,
- recipeImprover
+ recipeImprover,
+  mealPlanner
 }

@@ -165,11 +165,97 @@ Do not return markdown.
     }
 
 };
+            //    generateMealPlan
+const generateMealPlan = async (goal, days) => {
 
+    try {
+
+        const prompt = `
+You are an expert nutritionist.
+
+Create a ${days}-day meal plan for the goal:
+
+${goal}
+
+Rules:
+
+- Return EXACTLY ${days} days.
+- Each day must contain:
+  - Breakfast
+  - Lunch
+  - Dinner
+- Meals should be healthy.
+- Meals should be realistic.
+- Keep meal names short.
+
+Return ONLY valid JSON.
+
+Example:
+
+{
+  "plan": {
+    "Day 1": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    },
+    "Day 2": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    },
+       "Day 3": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    },
+       "Day 4": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    },
+       "Day 5": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    },
+       "Day 6": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    },
+       "Day 7": {
+      "Breakfast": "...",
+      "Lunch": "...",
+      "Dinner": "..."
+    }
+  }
+}
+
+Do not return markdown.
+`;
+
+        const response = await ai.models.generateContent({
+
+            model: "gemini-2.5-flash",
+            contents: prompt
+
+        });
+
+        return cleanJSON(response.text);
+
+    } catch (error) {
+
+        throw error;
+
+    }
+
+};
 
 module.exports = {
     generateRecipe,
     generateNutrition,
     generateSummary,
-    improveRecipe
+    improveRecipe,
+    generateMealPlan
 };
