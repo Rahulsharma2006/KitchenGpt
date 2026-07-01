@@ -3,7 +3,7 @@ const { generateNutrition } = require("../services/geminiService");
 const {generateSummary} = require("../services/geminiService");
 const {improveRecipe} = require("../services/geminiService");
 const {generateMealPlan} = require("../services/geminiService");
-
+const {generateChat}=require("../services/geminiService");
 
     //    GenerateAtRecipe
 const generateAIRecipe = async(req,res)=>{
@@ -172,10 +172,41 @@ try{
     }
 
 };
+    const chatAssistant = async (req, res) => {
+
+    try {
+
+        const { message } = req.body;
+
+        if (!message) {
+
+            return res.status(400).json({
+                message: "Message is required"
+            });
+
+        }
+
+        const reply = await generateChat(message);
+
+        res.status(200).json({
+            success: true,
+            reply
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+}; 
 module.exports={
 generateAIRecipe,
  nutritionEstimator,
  recipeSummarizer,
  recipeImprover,
-  mealPlanner
+  mealPlanner,
+  chatAssistant
 }

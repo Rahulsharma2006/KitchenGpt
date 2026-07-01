@@ -250,6 +250,50 @@ Do not return markdown.
 
     }
 
+}; 
+//                  generateChat
+        
+      const generateChat = async (message) => {
+
+    try {
+
+        const prompt = `
+You are KitchenGPT, an expert AI cooking assistant.
+
+You help users with:
+- Recipes
+- Cooking tips
+- Nutrition advice
+- Meal planning
+- Ingredient substitutions
+- Healthy eating
+- Food safety
+
+Rules:
+- Keep responses clear and helpful.
+- Use bullet points where appropriate.
+- If the question is unrelated to food, politely reply:
+"I can only help with cooking, recipes, nutrition, and meal planning."
+
+User Question:
+${message}
+`;
+
+        const response = await ai.models.generateContent({
+
+            model: "gemini-2.5-flash",
+            contents: prompt
+
+        });
+
+        return response.text;
+
+    } catch (error) {
+
+        throw error;
+
+    }
+
 };
 
 module.exports = {
@@ -257,5 +301,6 @@ module.exports = {
     generateNutrition,
     generateSummary,
     improveRecipe,
-    generateMealPlan
+    generateMealPlan,
+    generateChat
 };

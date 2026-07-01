@@ -7,6 +7,7 @@
    const { recipeSummarizer } = require("../controllers/aiController");
    const {recipeImprover} = require("../controllers/aiController");
    const {mealPlanner} = require("../controllers/aiController");
+   const {chatAssistant} = require("../controllers/aiController");
        
 
      router.post("/generate",authMiddleware,generateAIRecipe);
@@ -18,6 +19,8 @@
      router.post("/improve",authMiddleware,recipeImprover);
 
      router.post("/meal-planner",authMiddleware,mealPlanner);
+
+     router.post("/chat",authMiddleware,chatAssistant);
 
 
 
